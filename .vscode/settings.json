@@ -1,0 +1,5 @@
+{
+    "genieai.response.autoScroll": false,
+    "genieai.telemetry.disable": false,
+    "genieai.promptPrefix.adhoc-enabled": false
+}
