@@ -18,7 +18,6 @@ function Colorpicker() {
     '#34495E',
     '#D35400',
     '#1ABC9C',
-    // Add more HEX colors as needed
   ];
   
   // Style for positioning the Colorpicker to the right of an icon

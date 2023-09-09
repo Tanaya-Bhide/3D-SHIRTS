@@ -14,7 +14,7 @@ function Customizer() {
   //show tab content depending on active tab
   const [file, setFile] = useState('');
   const [prompt, setPrompt] = useState('');
-  const [generatingImg, setgeneratingImg] = useState(false);
+  const [generatingImg, setGeneratingImg] = useState(false);
   const [activeEditorTab, setActiveEditorTab] = useState(false);
   const [activeFilterTab, setActiveFilterTab] = useState({ logoShirt: true, stylishShirt: false });
   const generateTabContent = () => {
@@ -24,11 +24,58 @@ function Customizer() {
       case "filepicker":
         return <Filepicker />
       case "aipicker":
-        return <AIpicker />
+        return <AIpicker
+          prompt={prompt}
+          setPrompt={setPrompt}
+          generatingImg={generatingImg}
+          handleSubmit={handleSubmit}
+        />
       default:
         return null;
     }
   }
+  const handleSubmit = async (type) => {
+    if (!prompt) return alert("Please enter a prompt");
+  
+    try {
+      setGeneratingImg(true);
+  
+      const response = await fetch('http://localhost:8080/api/v1/dalle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          prompt,
+        })
+      });
+  
+      // Handle the response here
+      if (response.ok) {
+        const data = await response.json();
+        handleDecals(type, `data:image/png;base64,${data.photo}`);
+      } else {
+        // Handle non-OK responses (e.g., 404) here
+        alert("Error: Unable to fetch data from the server");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong");
+    } finally {
+      setGeneratingImg(false);
+      setActiveEditorTab("");
+    }
+  };
+  const handleDecals = (type, result) => {
+    const decalType = DecalTypes[type];
+
+    state[decalType.stateProperty] = result;
+
+    if(!activeFilterTab[decalType.filterTab]) {
+      handleActiveFilterTab(decalType.filterTab)
+    }
+  }
+
   return (
     <AnimatePresence>
       {!snap.intro && (
@@ -66,4 +113,4 @@ function Customizer() {
 }
 
 export default Customizer
-
+ 

@@ -1,6 +1,7 @@
 import React from 'react';
 import state from '../store'; // Adjust the import path
 import { useSnapshot } from 'valtio';
+import { getContrastingColor } from '../config/helpers';
 
 function CustomButton({ type, title, customStyles, handleclick }) {
   const snap = useSnapshot(state);
@@ -18,19 +19,10 @@ function CustomButton({ type, title, customStyles, handleclick }) {
       return {
         ...commonStyles,
         backgroundColor: snap.color,
-        color: '#fff',
+        color: getContrastingColor(snap.color),
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         transform: 'scale(1)',
       };
-    }
-
-    return {
-      ...commonStyles,
-      backgroundColor: 'transparent',
-      color: snap.color,
-      border: `2px solid ${snap.color}`,
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      transform: 'scale(1)',
     };
   };
 
@@ -46,6 +38,4 @@ function CustomButton({ type, title, customStyles, handleclick }) {
   );
 }
 
-
-
-export default CustomButton
+export default CustomButton;
