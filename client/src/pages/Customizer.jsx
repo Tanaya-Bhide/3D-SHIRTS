@@ -22,7 +22,11 @@ function Customizer() {
       case "colorpicker":
         return <Colorpicker />
       case "filepicker":
-        return <Filepicker />
+        return <Filepicker
+          file={file}
+          setFile={setFile}
+          readFile={readFile}
+        />
       case "aipicker":
         return <AIpicker
           prompt={prompt}
@@ -36,10 +40,10 @@ function Customizer() {
   }
   const handleSubmit = async (type) => {
     if (!prompt) return alert("Please enter a prompt");
-  
+
     try {
       setGeneratingImg(true);
-  
+
       const response = await fetch('http://localhost:8080/api/v1/dalle', {
         method: 'POST',
         headers: {
@@ -49,7 +53,7 @@ function Customizer() {
           prompt,
         })
       });
-  
+
       // Handle the response here
       if (response.ok) {
         const data = await response.json();
@@ -71,11 +75,40 @@ function Customizer() {
 
     state[decalType.stateProperty] = result;
 
-    if(!activeFilterTab[decalType.filterTab]) {
+    if (!activeFilterTab[decalType.filterTab]) {
       handleActiveFilterTab(decalType.filterTab)
     }
   }
+  const handleActiveFilterTab = (tabName) => {
+    switch (tabName) {
+      case "logoShirt":
+        state.isLogoTexture = !activeFilterTab[tabName];
+        break;
+      case "stylishShirt":
+        state.isFullTexture = !activeFilterTab[tabName];
+        break;
+      default:
+        state.isLogoTexture = true;
+        state.isFullTexture = false;
+        break;
+    }
 
+    // after setting the state, activeFilterTab is updated
+
+    setActiveFilterTab((prevState) => {
+      return {
+        ...prevState,
+        [tabName]: !prevState[tabName]
+      }
+    })
+  }
+  const readFile = (type) => {
+    reader(file)
+      .then((result) => {
+        handleDecals(type, result);
+        setActiveEditorTab("");
+      })
+  }
   return (
     <AnimatePresence>
       {!snap.intro && (
@@ -113,4 +146,3 @@ function Customizer() {
 }
 
 export default Customizer
- 

@@ -3,7 +3,7 @@ import state from '../store'; // Adjust the import path
 import { useSnapshot } from 'valtio';
 import { getContrastingColor } from '../config/helpers';
 
-function CustomButton({ type, title, customStyles, handleclick }) {
+function CustomButton({ type, title, customStyles, handleClick }) {
   const snap = useSnapshot(state);
 
   const generateStyle = (type) => {
@@ -31,7 +31,7 @@ function CustomButton({ type, title, customStyles, handleclick }) {
       id="custom-button"
       className={`rounded-full ${customStyles}`}
       style={{ ...generateStyle(type) }}
-      onClick={handleclick}
+      onClick={handleClick}
     >
       {title}
     </button>
